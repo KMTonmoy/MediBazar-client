@@ -64,16 +64,18 @@ const testimonialsData = [
 const Testimonials = () => {
     return (
         <div className="py-10 px-5">
-            <div className="flex items-center justify-between">
-                <div className="w-1/2">
+            <h2 className="text-4xl font-bold text-center mb-6">Our Testimonials</h2>
+
+            <div className="flex flex-col md:flex-row gap-10 items-center justify-between">
+                <div className="md:w-1/2">
                     <img
-                        src="https://t4.ftcdn.net/jpg/01/28/17/47/360_F_128174778_0XvhB1qi70yXNOPuUFzBNT85xKaWnVde.jpg"
+                        src="https://www.sweetprocess.com/wp-content/uploads/2022/03/Testimonials.jpg"
                         alt="FAQ"
-                        className="w-full h-[500px] object-cover rounded-lg shadow-xl"
+                        className="w-full h-[400px] sm:h-[500px] object-cover rounded-lg shadow-xl"
                     />
                 </div>
 
-                <div className="w-1/2 pl-10">
+                <div className="md:w-1/2 md:pl-10">
                     <Carousel
                         opts={{
                             align: "start",
