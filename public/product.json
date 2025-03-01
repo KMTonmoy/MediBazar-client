@@ -1,0 +1,277 @@
+[
+    {
+        "id": "12345",
+        "name": "Paracetamol",
+        "price": 15.99,
+        "category": "Pain Reliever",
+        "imageUrl": "https://example.com/images/paracetamol.jpg",
+        "ageRange": "For ages 12 and up",
+        "tags": [
+            "Over-the-counter",
+            "Pain Relief",
+            "Fever Reducer"
+        ],
+        "warnings": [
+            "May cause drowsiness",
+            "Avoid using if allergic to paracetamol",
+            "Consult a doctor before use if pregnant or breastfeeding"
+        ],
+        "sideEffects": [
+            "Nausea",
+            "Dizziness",
+            "Liver damage (in excessive doses)"
+        ],
+        "preparation": "Take 1 tablet every 4-6 hours as needed. Do not exceed 4 tablets in 24 hours.",
+        "requiresPrescription": false
+    },
+    {
+        "id": "12346",
+        "name": "Ibuprofen",
+        "price": 12.49,
+        "category": "Anti-inflammatory",
+        "imageUrl": "https://example.com/images/ibuprofen.jpg",
+        "ageRange": "For ages 12 and up",
+        "tags": [
+            "Pain Relief",
+            "Anti-inflammatory",
+            "Fever Reducer"
+        ],
+        "warnings": [
+            "May cause stomach irritation",
+            "Not recommended for people with ulcers",
+            "Consult a doctor before use if pregnant"
+        ],
+        "sideEffects": [
+            "Upset stomach",
+            "Headache",
+            "Drowsiness"
+        ],
+        "preparation": "Take 1 tablet every 6-8 hours as needed. Do not exceed 6 tablets in 24 hours.",
+        "requiresPrescription": false
+    },
+    {
+        "id": "12347",
+        "name": "Amoxicillin",
+        "price": 20.99,
+        "category": "Antibiotic",
+        "imageUrl": "https://example.com/images/amoxicillin.jpg",
+        "ageRange": "For ages 3 and up",
+        "tags": [
+            "Prescription",
+            "Antibiotic",
+            "Infection Treatment"
+        ],
+        "warnings": [
+            "May cause allergic reaction",
+            "Complete the full course as prescribed",
+            "Not recommended for people with penicillin allergy"
+        ],
+        "sideEffects": [
+            "Nausea",
+            "Diarrhea",
+            "Rash"
+        ],
+        "preparation": "Take 1 capsule every 8 hours. Complete the full course as prescribed by the doctor.",
+        "requiresPrescription": true
+    },
+    {
+        "id": "12348",
+        "name": "Cetirizine",
+        "price": 10.49,
+        "category": "Antihistamine",
+        "imageUrl": "https://example.com/images/cetirizine.jpg",
+        "ageRange": "For ages 6 and up",
+        "tags": [
+            "Allergy Relief",
+            "Over-the-counter",
+            "Antihistamine"
+        ],
+        "warnings": [
+            "May cause drowsiness",
+            "Avoid alcohol while taking this medicine",
+            "Consult a doctor before use if pregnant"
+        ],
+        "sideEffects": [
+            "Dry mouth",
+            "Drowsiness",
+            "Headache"
+        ],
+        "preparation": "Take 1 tablet once a day. Do not exceed the recommended dose.",
+        "requiresPrescription": false
+    },
+    {
+        "id": "12349",
+        "name": "Prednisolone",
+        "price": 18.99,
+        "category": "Steroid",
+        "imageUrl": "https://example.com/images/prednisolone.jpg",
+        "ageRange": "For ages 5 and up",
+        "tags": [
+            "Prescription",
+            "Steroid",
+            "Inflammation Treatment"
+        ],
+        "warnings": [
+            "May weaken the immune system",
+            "Consult a doctor before use if diabetic",
+            "Not recommended for people with a history of ulcers"
+        ],
+        "sideEffects": [
+            "Weight gain",
+            "Increased blood sugar",
+            "Insomnia"
+        ],
+        "preparation": "Take 1 tablet once a day with food. Follow the doctor’s instructions on dosage.",
+        "requiresPrescription": true
+    },
+    {
+        "id": "12350",
+        "name": "Loratadine",
+        "price": 9.99,
+        "category": "Antihistamine",
+        "imageUrl": "https://example.com/images/loratadine.jpg",
+        "ageRange": "For ages 2 and up",
+        "tags": [
+            "Allergy Relief",
+            "Over-the-counter",
+            "Non-drowsy"
+        ],
+        "warnings": [
+            "Consult a doctor before use if pregnant",
+            "May interact with other medications",
+            "Do not exceed the recommended dose"
+        ],
+        "sideEffects": [
+            "Dry mouth",
+            "Headache",
+            "Fatigue"
+        ],
+        "preparation": "Take 1 tablet once daily. Do not exceed 1 tablet per day.",
+        "requiresPrescription": false
+    },
+    {
+        "id": "12351",
+        "name": "Metformin",
+        "price": 25.99,
+        "category": "Diabetes Medication",
+        "imageUrl": "https://example.com/images/metformin.jpg",
+        "ageRange": "For ages 18 and up",
+        "tags": [
+            "Prescription",
+            "Diabetes",
+            "Blood Sugar Control"
+        ],
+        "warnings": [
+            "May cause gastrointestinal discomfort",
+            "Consult a doctor if you have kidney disease",
+            "Do not take alcohol while using this medicine"
+        ],
+        "sideEffects": [
+            "Nausea",
+            "Diarrhea",
+            "Stomach upset"
+        ],
+        "preparation": "Take 1 tablet twice daily with meals. Do not exceed the prescribed dose.",
+        "requiresPrescription": true
+    },
+    {
+        "id": "12352",
+        "name": "Simvastatin",
+        "price": 22.99,
+        "category": "Cholesterol Medication",
+        "imageUrl": "https://example.com/images/simvastatin.jpg",
+        "ageRange": "For ages 18 and up",
+        "tags": [
+            "Prescription",
+            "Cholesterol",
+            "Heart Health"
+        ],
+        "warnings": [
+            "May cause muscle pain",
+            "Avoid grapefruit while taking this medication",
+            "Consult a doctor if you have liver issues"
+        ],
+        "sideEffects": [
+            "Muscle pain",
+            "Nausea",
+            "Headache"
+        ],
+        "preparation": "Take 1 tablet once daily in the evening. Follow the doctor’s instructions.",
+        "requiresPrescription": true
+    },
+    {
+        "id": "12353",
+        "name": "Omeprazole",
+        "price": 14.49,
+        "category": "Acid Reducer",
+        "imageUrl": "https://example.com/images/omeprazole.jpg",
+        "ageRange": "For ages 18 and up",
+        "tags": [
+            "Over-the-counter",
+            "Heartburn Relief",
+            "Gastrointestinal"
+        ],
+        "warnings": [
+            "May cause dizziness",
+            "Consult a doctor if you have liver disease",
+            "Do not take if allergic to omeprazole"
+        ],
+        "sideEffects": [
+            "Headache",
+            "Nausea",
+            "Stomach pain"
+        ],
+        "preparation": "Take 1 capsule once a day before meals. Do not exceed the recommended dose.",
+        "requiresPrescription": false
+    },
+    {
+        "id": "12354",
+        "name": "Salbutamol",
+        "price": 8.99,
+        "category": "Bronchodilator",
+        "imageUrl": "https://example.com/images/salbutamol.jpg",
+        "ageRange": "For ages 6 and up",
+        "tags": [
+            "Prescription",
+            "Asthma Relief",
+            "Bronchodilator"
+        ],
+        "warnings": [
+            "May cause shakiness",
+            "Consult a doctor if you have heart issues",
+            "Do not exceed prescribed dose"
+        ],
+        "sideEffects": [
+            "Tremors",
+            "Headache",
+            "Increased heart rate"
+        ],
+        "preparation": "Use 1 inhalation every 4-6 hours as needed. Do not exceed 12 inhalations in 24 hours.",
+        "requiresPrescription": true
+    },
+    {
+        "id": "12355",
+        "name": "Losartan",
+        "price": 30.99,
+        "category": "Blood Pressure Medication",
+        "imageUrl": "https://example.com/images/losartan.jpg",
+        "ageRange": "For ages 18 and up",
+        "tags": [
+            "Prescription",
+            "Blood Pressure",
+            "Heart Health"
+        ],
+        "warnings": [
+            "May cause dizziness",
+            "Monitor blood pressure regularly",
+            "Consult a doctor if pregnant"
+        ],
+        "sideEffects": [
+            "Dizziness",
+            "Fatigue",
+            "Low blood pressure"
+        ],
+        "preparation": "Take 1 tablet once daily. Follow doctor’s recommendations.",
+        "requiresPrescription": true
+    }
+]

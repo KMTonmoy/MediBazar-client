@@ -5,6 +5,7 @@ import Testimonials from '@/components/Testimonials'
 import React from 'react'
 import Branding from '@/components/OurBranding'
 import Footer from '@/components/Footer'
+import FeaturedBicycles from '@/components/FeaturedProduct'
 
 const page = () => {
   return (
@@ -12,7 +13,11 @@ const page = () => {
       <Banner />
       <BuyOption />
       <Sponsors />
+
       <Branding />
+
+      <FeaturedBicycles />
+
       <Testimonials />
       <Footer />
     </div>

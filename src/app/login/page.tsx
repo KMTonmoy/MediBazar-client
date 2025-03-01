@@ -58,7 +58,7 @@ const LoginPage = () => {
                         {/* Google reCAPTCHA */}
                         <div className="mt-4">
                             <ReCAPTCHA
-                                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY} // Use the environment variable for the client key
+                                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY || ''}
                                 onChange={handleCaptchaChange}
                             />
                         </div>
