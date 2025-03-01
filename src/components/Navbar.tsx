@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { LuShoppingBag } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
-import { IoSearchOutline } from "react-icons/io5";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 import { motion } from 'framer-motion';
@@ -10,10 +9,11 @@ import Swal from 'sweetalert2';
 import Link from 'next/link';
 import logo from '../../public/logo.webp';
 import Image from 'next/image';
-
-
+import { useRouter } from 'next/navigation';
+ 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const router = useRouter();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -34,7 +34,7 @@ const Navbar = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 localStorage.clear();
-                navigate('/login');
+                router.push('/login');
                 Swal.fire('Logged out!', 'You have been logged out.', 'success');
                 window.location.reload();
             }
@@ -42,7 +42,7 @@ const Navbar = () => {
     };
 
     return (
-        <div className='bg-white shadow-2xs sticky top-0 w-full z-50'>
+        <div className='bg-white py-5 shadow-2xs sticky top-0 w-full z-50'>
             <div className='max-w-7xl mx-auto px-4 md:py-[15px]'>
                 <div className='flex justify-between items-center text-black'>
                     <h1 className='font-[800] text-[26px]'>
@@ -75,9 +75,6 @@ const Navbar = () => {
                         </Link>
                     </div>
                     <div className='flex gap-5 items-center'>
-                        <Link className='text-[27px] font-[600] hover:text-[#4F97FC] transition-colors duration-300' href='/shop'>
-                            <IoSearchOutline />
-                        </Link>
                         <Link className='text-[27px] font-[600] hover:text-[#4F97FC] transition-colors duration-300' href='/cart'>
                             <LuShoppingBag />
                         </Link>
@@ -102,10 +99,10 @@ const Navbar = () => {
                     animate={{ x: 0 }}
                     exit={{ x: '100%' }}
                     transition={{ type: 'tween', duration: 0.3 }}
-                    className='fixed top-0 right-0 h-full w-[70%] bg-black text-white shadow-lg z-50'
+                    className='fixed top-0 right-0 h-full w-[70%] bg-white text-black shadow-lg z-50'
                 >
                     <div className='flex justify-between items-center px-4 py-4 border-b border-gray-700'>
-                        <h1 className='font-[800] text-[26px]'>GearUp</h1>
+                        <Image width={200} src={logo} alt="logo" />
                         <button onClick={toggleMenu} className='text-[27px] hover:text-[#4F97FC] transition-colors duration-300'>
                             <IoClose />
                         </button>

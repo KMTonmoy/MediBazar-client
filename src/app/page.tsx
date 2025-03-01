@@ -1,9 +1,12 @@
+import Banner from '@/components/Banner'
+import BuyOption from '@/components/BuyOption'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-      Home page
+      <Banner />
+      <BuyOption />
     </div>
   )
 }
