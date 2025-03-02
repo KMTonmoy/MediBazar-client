@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LuShoppingBag } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
@@ -10,16 +10,47 @@ import Link from 'next/link';
 import logo from '../../public/logo.webp';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
- 
+import { jwtDecode } from 'jwt-decode';
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const router = useRouter();
+    const [user, setUser] = useState<any>(null);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
-    const isActive = (path: string) => location.pathname === path ? 'text-[#4F97FC]' : '';
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+
+    const isActive = (path: string) => {
+        if (typeof window !== 'undefined') {
+            return window.location.pathname === path ? 'text-[#4F97FC]' : '';
+        }
+        return '';
+    };
 
     const handleLogout = () => {
         Swal.fire({
@@ -40,6 +71,18 @@ const Navbar = () => {
             }
         });
     };
+
+    const getUserDataFromToken = () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const decodedToken: any = jwtDecode(token);
+            setUser(decodedToken);
+        }
+    };
+
+    useEffect(() => {
+        getUserDataFromToken();
+    }, []);
 
     return (
         <div className='bg-white py-5 shadow-2xs sticky top-0 w-full z-50'>
@@ -66,27 +109,30 @@ const Navbar = () => {
                                 <span className="absolute left-0 bottom-[-2px] h-[2px] w-0 bg-[#4F97FC] transition-all duration-300 group-hover:w-full"></span>
                             </Link>
                         ))}
-                        <Link
-                            href={`/dashboard`}
-                            className={`text-[17px] font-[600] relative group transition-all duration-300 ${isActive('/dashboard')}`}
-                        >
-                            Dashboard
-                            <span className="absolute left-0 bottom-[-2px] h-[2px] w-0 bg-[#4F97FC] transition-all duration-300 group-hover:w-full"></span>
-                        </Link>
                     </div>
                     <div className='flex gap-5 items-center'>
                         <Link className='text-[27px] font-[600] hover:text-[#4F97FC] transition-colors duration-300' href='/cart'>
                             <LuShoppingBag />
                         </Link>
-                        <Link className='text-[27px] font-[600] hover:text-[#4F97FC] transition-colors duration-300' href='/login'>
-                            <FaRegUser />
-                        </Link>
-                        <button
-                            className='text-[17px] bg-[#4F97FC] text-white font-[600] hover:bg-[#4F97FC] py-1 px-4 rounded transition-colors duration-300'
-                            onClick={handleLogout}
-                        >
-                            Logout
-                        </button>
+                        {user ? (
+                            <div className='relative'>
+                                <Avatar onClick={toggleDropdown} className='cursor-pointer'>
+                                    <AvatarImage src={user?.avatar || '/default-avatar.png'} alt="User Avatar" />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
+                                {isDropdownOpen && (
+                                    <div className='absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg'>
+                                        <Link href="/profile" className='block px-4 py-2 text-black hover:bg-gray-200'>Profile</Link>
+                                        <Link href="/dashboard" className='block px-4 py-2 text-black hover:bg-gray-200'>Dashboard</Link>
+                                        <button onClick={handleLogout} className='block w-full px-4 py-2 text-black hover:bg-gray-200 text-left'>Logout</button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <Link className='text-[27px] font-[600] hover:text-[#4F97FC] transition-colors duration-300' href='/login'>
+                                <FaRegUser />
+                            </Link>
+                        )}
                         <button className='md:hidden text-[27px] hover:text-[#4F97FC] transition-colors duration-300' onClick={toggleMenu}>
                             <HiOutlineMenuAlt3 />
                         </button>
@@ -127,15 +173,15 @@ const Navbar = () => {
                                 <span className="absolute left-0 bottom-[-2px] h-[2px] w-0 bg-[#4F97FC] transition-all duration-300 group-hover:w-full"></span>
                             </Link>
                         ))}
-                        <Link
-                            className='flex items-center text-[17px] font-[600] relative group transition-all duration-300'
-                            href='/profile'
-                            onClick={toggleMenu}
-                        >
-                            <FaRegUser className='mr-2' />
-                            Login
-                            <span className="absolute left-0 bottom-[-2px] h-[2px] w-0 bg-[#4F97FC] transition-all duration-300 group-hover:w-full"></span>
-                        </Link>
+                        {user ? (
+                            <>
+                                <Link href="/profile" className='block px-4 py-2 text-black hover:bg-gray-200' onClick={toggleMenu}>Profile</Link>
+                                <Link href="/dashboard" className='block px-4 py-2 text-black hover:bg-gray-200' onClick={toggleMenu}>Dashboard</Link>
+                                <button onClick={handleLogout} className='block w-full px-4 py-2 text-black hover:bg-gray-200 text-left'>Logout</button>
+                            </>
+                        ) : (
+                            <Link href="/login" className='block px-4 py-2 text-black hover:bg-gray-200' onClick={toggleMenu}>Login</Link>
+                        )}
                     </div>
                 </motion.div>
             )}

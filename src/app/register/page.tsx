@@ -1,25 +1,25 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { FaUser, FaEnvelope, FaLock, FaPhoneAlt, FaBirthdayCake } from 'react-icons/fa'
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import Lottie from 'lottie-react'
 import animationData from '../../../public/signup.json'
+import Swal from 'sweetalert2'
 
 const RegisterPage = () => {
+    const router = useRouter()
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
+        name: '',
         email: '',
         password: '',
-        phone: '',
-        dob: '',
+        role: 'customer',  // Set default role as 'customer'
     })
     const [captchaVerified, setCaptchaVerified] = useState(false)
-    const [isUnderage, setIsUnderage] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -33,23 +33,37 @@ const RegisterPage = () => {
         setCaptchaVerified(!!value)
     }
 
-    const calculateAge = (dob: string) => {
-        const birthDate = new Date(dob)
-        const age = new Date().getFullYear() - birthDate.getFullYear()
-        setIsUnderage(age < 18)
-    }
-
-    useEffect(() => {
-        if (formData.dob) {
-            calculateAge(formData.dob)
-        }
-    }, [formData.dob])
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setLoading(true)
 
-        if (!isUnderage) {
-            console.log('Form submitted', formData)
+        try {
+            const response = await fetch('http://localhost:8000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+
+            const data = await response.json()
+
+            if (response.ok) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Registration successful!',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                }).then(() => {
+                    router.push('/login')
+                })
+            } else {
+                Swal.fire('Error', data.message || 'Registration failed!', 'error')
+            }
+        } catch (error) {
+            Swal.fire('Error', 'Something went wrong! Please try again.', 'error')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -63,25 +77,15 @@ const RegisterPage = () => {
                     <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">Register</h2>
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <Label htmlFor="firstName" className="text-sm font-semibold text-gray-600">First Name</Label>
+                            <Label htmlFor="name" className="text-sm font-semibold text-gray-600">Full Name</Label>
                             <Input
-                                id="firstName"
-                                name="firstName"
-                                value={formData.firstName}
+                                id="name"
+                                name="name"
+                                value={formData.name}
                                 onChange={handleInputChange}
-                                placeholder="Enter your first name"
+                                placeholder="Enter your full name"
                                 className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="lastName" className="text-sm font-semibold text-gray-600">Last Name</Label>
-                            <Input
-                                id="lastName"
-                                name="lastName"
-                                value={formData.lastName}
-                                onChange={handleInputChange}
-                                placeholder="Enter your last name"
-                                className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                                required
                             />
                         </div>
                         <div>
@@ -89,10 +93,12 @@ const RegisterPage = () => {
                             <Input
                                 id="email"
                                 name="email"
+                                type="email"
                                 value={formData.email}
                                 onChange={handleInputChange}
                                 placeholder="Enter your email"
                                 className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                                required
                             />
                         </div>
                         <div>
@@ -105,29 +111,7 @@ const RegisterPage = () => {
                                 onChange={handleInputChange}
                                 placeholder="Enter your password"
                                 className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="phone" className="text-sm font-semibold text-gray-600">Phone</Label>
-                            <Input
-                                id="phone"
-                                name="phone"
-                                type="tel"
-                                value={formData.phone}
-                                onChange={handleInputChange}
-                                placeholder="Enter your phone number"
-                                className="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="dob" className="text-sm font-semibold text-gray-600">Date of Birth</Label>
-                            <Input
-                                id="dob"
-                                name="dob"
-                                type="date"
-                                value={formData.dob}
-                                onChange={handleInputChange}
-                                className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                                required
                             />
                         </div>
                         <div className="mt-4">
@@ -138,14 +122,13 @@ const RegisterPage = () => {
                         </div>
                         <Button
                             type="submit"
-                            disabled={!captchaVerified || isUnderage}
-                            className={`w-full py-3 ${captchaVerified ? 'bg-blue-500' : 'bg-blue-300'} text-white text-lg font-semibold rounded-md mt-4`}
+                            disabled={!captchaVerified || loading}
+                            className={`w-full py-3 ${
+                                !captchaVerified || loading ? 'bg-blue-300' : 'bg-blue-500'
+                            } text-white text-lg font-semibold rounded-md mt-4`}
                         >
-                            Register
+                            {loading ? 'Registering...' : 'Register'}
                         </Button>
-                        {isUnderage && (
-                            <p className="text-red-500 text-center mt-2">You must be 18 or older to register.</p>
-                        )}
                     </form>
                 </div>
             </div>

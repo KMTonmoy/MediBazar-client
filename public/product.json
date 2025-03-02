@@ -1,6 +1,7 @@
 [
     {
         "id": "12345",
+        "insock": 5,
         "name": "Paracetamol",
         "price": 15.99,
         "category": "Pain Reliever",
