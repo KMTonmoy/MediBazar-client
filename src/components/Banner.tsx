@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaChevronLeft, FaChevronRight, FaSearch } from 'react-icons/fa';
 
 const Banner = () => {
@@ -26,6 +26,15 @@ const Banner = () => {
         setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
     };
 
+    // Auto slide every 4 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            nextSlide();
+        }, 4000);
+
+        return () => clearInterval(interval);
+    }, [currentSlide]);
+
     return (
         <div className="relative w-full h-[60vh] sm:h-[700px] overflow-hidden">
             {slides.map((slide, index) => (
@@ -41,6 +50,7 @@ const Banner = () => {
                             {slide.subtitle}
                         </h1>
 
+                        {/* Search Input */}
                         <div className="relative flex justify-center items-center mt-5">
                             <input
                                 type="text"
@@ -55,20 +65,24 @@ const Banner = () => {
                 </div>
             ))}
 
-            <button
-                onClick={prevSlide}
-                className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black text-white p-3 rounded-full transition-all z-10"
-            >
-                <FaChevronLeft size={20} />
-            </button>
-            <button
-                onClick={nextSlide}
-                className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black text-white p-3 rounded-full transition-all z-10"
-            >
-                <FaChevronRight size={20} />
-            </button>
+            {/* Navigation Buttons - Moved to Bottom Right */}
+            <div className="absolute bottom-5 right-5 flex gap-3">
+                <button
+                    onClick={prevSlide}
+                    className="bg-black/50 hover:bg-black text-white p-3 rounded-full transition-all"
+                >
+                    <FaChevronLeft size={20} />
+                </button>
+                <button
+                    onClick={nextSlide}
+                    className="bg-black/50 hover:bg-black text-white p-3 rounded-full transition-all"
+                >
+                    <FaChevronRight size={20} />
+                </button>
+            </div>
 
-            <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex gap-2">
+            {/* Pagination Dots */}
+            <div className="absolute bottom-5 left-[50%] transform -translate-x-1/2 flex gap-2">
                 {slides.map((_, index) => (
                     <button
                         key={index}

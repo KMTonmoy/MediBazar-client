@@ -9,6 +9,20 @@ import { Button } from '@/components/ui/button'
 import Lottie from 'lottie-react'
 import animationData from '../../../public/signup.json'
 import Swal from 'sweetalert2'
+import axios from 'axios'
+
+// Image upload function to get image URL
+export const imageUpload = async (image: File) => {
+    const formData = new FormData()
+    formData.append('image', image)
+
+    const { data } = await axios.post(
+        'https://api.imgbb.com/1/upload?key=19c9072b07556f7849d6dea75b7e834d',
+        formData
+    )
+
+    return data.data.display_url // Return the image URL
+}
 
 const RegisterPage = () => {
     const router = useRouter()
@@ -16,10 +30,11 @@ const RegisterPage = () => {
         name: '',
         email: '',
         password: '',
-        role: 'customer',  // Set default role as 'customer'
+        role: 'customer', // Default role as 'customer'
     })
     const [captchaVerified, setCaptchaVerified] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [image, setImage] = useState<File | null>(null)
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -33,17 +48,32 @@ const RegisterPage = () => {
         setCaptchaVerified(!!value)
     }
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0]
+            setImage(file)
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
 
         try {
+            let imageUrl = null
+            if (image) {
+                imageUrl = await imageUpload(image) // Get image URL from image upload
+            }
+
             const response = await fetch('http://localhost:8000/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    ...formData,
+                    image: imageUrl, // Send image URL in the request
+                }),
             })
 
             const data = await response.json()
@@ -114,6 +144,16 @@ const RegisterPage = () => {
                                 required
                             />
                         </div>
+                        <div>
+                            <Label htmlFor="image" className="text-sm font-semibold text-gray-600">Profile Image</Label>
+                            <Input
+                                id="image"
+                                name="image"
+                                type="file"
+                                onChange={handleImageChange}
+                                className="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            />
+                        </div>
                         <div className="mt-4">
                             <ReCAPTCHA
                                 sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY || ''}
@@ -123,9 +163,8 @@ const RegisterPage = () => {
                         <Button
                             type="submit"
                             disabled={!captchaVerified || loading}
-                            className={`w-full py-3 ${
-                                !captchaVerified || loading ? 'bg-blue-300' : 'bg-blue-500'
-                            } text-white text-lg font-semibold rounded-md mt-4`}
+                            className={`w-full py-3 ${!captchaVerified || loading ? 'bg-blue-300' : 'bg-blue-500'
+                                } text-white text-lg font-semibold rounded-md mt-4`}
                         >
                             {loading ? 'Registering...' : 'Register'}
                         </Button>

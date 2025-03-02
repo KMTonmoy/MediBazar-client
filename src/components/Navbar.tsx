@@ -9,48 +9,21 @@ import Swal from 'sweetalert2';
 import Link from 'next/link';
 import logo from '../../public/logo.webp';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useRole from '@/hook/useRole';
 
 const Navbar = () => {
+    const UserData = useRole();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const router = useRouter();
-    const [user, setUser] = useState<any>(null);
+    const pathname = usePathname();
+    const [user, setUser] = useState(null);
 
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
-
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
-
-    const isActive = (path: string) => {
-        if (typeof window !== 'undefined') {
-            return window.location.pathname === path ? 'text-[#4F97FC]' : '';
-        }
-        return '';
-    };
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
     const handleLogout = () => {
         Swal.fire({
@@ -72,16 +45,11 @@ const Navbar = () => {
         });
     };
 
-    const getUserDataFromToken = () => {
+    useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            const decodedToken: any = jwtDecode(token);
-            setUser(decodedToken);
+            setUser(jwtDecode(token));
         }
-    };
-
-    useEffect(() => {
-        getUserDataFromToken();
     }, []);
 
     return (
@@ -92,23 +60,15 @@ const Navbar = () => {
                         <Image width={200} src={logo} alt="logo" />
                     </h1>
                     <div className='hidden md:flex gap-5'>
-                        <Link
-                            href={`/`}
-                            className={`text-[17px] font-[600] relative group transition-all duration-300 ${isActive('/')}`}
-                        >
-                            Home
-                            <span className="absolute left-0 bottom-[-2px] h-[2px] w-0 bg-[#4F97FC] transition-all duration-300 group-hover:w-full"></span>
-                        </Link>
-                        {['Shop', 'Blogs', 'Contact Us', 'About'].map((item, index) => (
-                            <Link
-                                key={index}
-                                href={`/${item.replace(/\s+/g, '').toLowerCase()}`}
-                                className={`text-[17px] font-[600] relative group transition-all duration-300 ${isActive(`/${item.replace(/\s+/g, '').toLowerCase()}`)}`}
-                            >
-                                {item}
-                                <span className="absolute left-0 bottom-[-2px] h-[2px] w-0 bg-[#4F97FC] transition-all duration-300 group-hover:w-full"></span>
-                            </Link>
-                        ))}
+                        <Link href="/" className={`text-[17px] font-[600] transition-all duration-300 ${pathname === '/' ? 'text-[#4F97FC]' : 'text-black'}`}>Home</Link>
+                        {['Shop', 'Blogs', 'Contact Us', 'About'].map((item, index) => {
+                            const linkPath = `/${item.replace(/\s+/g, '').toLowerCase()}`;
+                            return (
+                                <Link key={index} href={linkPath} className={`text-[17px] font-[600] transition-all duration-300 ${pathname === linkPath ? 'text-[#4F97FC]' : 'text-black'}`}>
+                                    {item}
+                                </Link>
+                            );
+                        })}
                     </div>
                     <div className='flex gap-5 items-center'>
                         <Link className='text-[27px] font-[600] hover:text-[#4F97FC] transition-colors duration-300' href='/cart'>
@@ -117,7 +77,7 @@ const Navbar = () => {
                         {user ? (
                             <div className='relative'>
                                 <Avatar onClick={toggleDropdown} className='cursor-pointer'>
-                                    <AvatarImage src={user?.avatar || '/default-avatar.png'} alt="User Avatar" />
+                                    <AvatarImage src={UserData?.userData?.length > 0 ? UserData.userData[0].image : '/default-avatar.png'} alt="User Avatar" />
                                     <AvatarFallback>CN</AvatarFallback>
                                 </Avatar>
                                 {isDropdownOpen && (
@@ -140,13 +100,7 @@ const Navbar = () => {
                 </div>
             </div>
             {isMenuOpen && (
-                <motion.div
-                    initial={{ x: '100%' }}
-                    animate={{ x: 0 }}
-                    exit={{ x: '100%' }}
-                    transition={{ type: 'tween', duration: 0.3 }}
-                    className='fixed top-0 right-0 h-full w-[70%] bg-white text-black shadow-lg z-50'
-                >
+                <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'tween', duration: 0.3 }} className='fixed top-0 right-0 h-full w-[70%] bg-white text-black shadow-lg z-50'>
                     <div className='flex justify-between items-center px-4 py-4 border-b border-gray-700'>
                         <Image width={200} src={logo} alt="logo" />
                         <button onClick={toggleMenu} className='text-[27px] hover:text-[#4F97FC] transition-colors duration-300'>
@@ -154,25 +108,15 @@ const Navbar = () => {
                         </button>
                     </div>
                     <div className='flex flex-col gap-6 px-4 py-6'>
-                        <Link
-                            href={`/`}
-                            className={`text-[17px] font-[600] relative group transition-all duration-300 ${isActive('/')}`}
-                            onClick={toggleMenu}
-                        >
-                            Home
-                            <span className="absolute left-0 bottom-[-2px] h-[2px] w-0 bg-[#4F97FC] transition-all duration-300 group-hover:w-full"></span>
-                        </Link>
-                        {['Shop', 'Blogs', 'Contact Us'].map((item, index) => (
-                            <Link
-                                key={index}
-                                href={`/${item.replace(/\s+/g, '').toLowerCase()}`}
-                                className={`text-[17px] font-[600] relative group transition-all duration-300 ${isActive(`/${item.replace(/\s+/g, '').toLowerCase()}`)}`}
-                                onClick={toggleMenu}
-                            >
-                                {item}
-                                <span className="absolute left-0 bottom-[-2px] h-[2px] w-0 bg-[#4F97FC] transition-all duration-300 group-hover:w-full"></span>
-                            </Link>
-                        ))}
+                        <Link href="/" className={`text-[17px] font-[600] transition-all duration-300 ${pathname === '/' ? 'text-[#4F97FC]' : 'text-black'}`} onClick={toggleMenu}>Home</Link>
+                        {['Shop', 'Blogs', 'Contact Us'].map((item, index) => {
+                            const linkPath = `/${item.replace(/\s+/g, '').toLowerCase()}`;
+                            return (
+                                <Link key={index} href={linkPath} className={`text-[17px] font-[600] transition-all duration-300 ${pathname === linkPath ? 'text-[#4F97FC]' : 'text-black'}`} onClick={toggleMenu}>
+                                    {item}
+                                </Link>
+                            );
+                        })}
                         {user ? (
                             <>
                                 <Link href="/profile" className='block px-4 py-2 text-black hover:bg-gray-200' onClick={toggleMenu}>Profile</Link>
