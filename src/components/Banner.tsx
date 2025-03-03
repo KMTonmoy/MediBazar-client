@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { FaChevronLeft, FaChevronRight, FaSearch } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 const Banner = () => {
     const slides = [
@@ -17,6 +18,8 @@ const Banner = () => {
     ];
 
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [searchQuery, setSearchQuery] = useState('');
+    const router = useRouter();
 
     const prevSlide = () => {
         setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
@@ -26,14 +29,13 @@ const Banner = () => {
         setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
     };
 
-    // Auto slide every 4 seconds
-    useEffect(() => {
-        const interval = setInterval(() => {
-            nextSlide();
-        }, 4000);
+    const handleSearch = () => {
+        if (searchQuery.trim()) {
+            router.push(`/shop?search=${encodeURIComponent(searchQuery)}`);
+        }
+    };
 
-        return () => clearInterval(interval);
-    }, [currentSlide]);
+
 
     return (
         <div className="relative w-full h-[60vh] sm:h-[700px] overflow-hidden">
@@ -54,10 +56,15 @@ const Banner = () => {
                         <div className="relative flex justify-center items-center mt-5">
                             <input
                                 type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search for medicines..."
                                 className="px-5 py-3 w-[90%] sm:w-[450px] bg-white border-none shadow-md rounded-full outline-none text-gray-800 pr-12"
                             />
-                            <button className="absolute right-8 md:right-[25%] top-1/2 transform -translate-y-1/2 bg-[#4F97FC] text-white p-3 rounded-full shadow-lg hover:bg-[#3B7DD4] transition-all">
+                            <button
+                                onClick={handleSearch}
+                                className="absolute right-8 md:right-[25%] top-1/2 transform -translate-y-1/2 bg-[#4F97FC] text-white p-3 rounded-full shadow-lg hover:bg-[#3B7DD4] transition-all"
+                            >
                                 <FaSearch size={18} />
                             </button>
                         </div>
