@@ -18,9 +18,9 @@ const ShopPage = () => {
     useEffect(() => {
         const fetchMedicines = async () => {
             try {
-                const response = await fetch('/product.json');
+                const response = await fetch('http://localhost:8000/api/medicines/');
                 const data = await response.json();
-                setMedicines(data);
+                setMedicines(data.data);
             } catch (error) {
                 console.error('Error fetching medicines:', error);
             } finally {
