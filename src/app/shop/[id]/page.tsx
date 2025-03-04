@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import { jwtDecode } from 'jwt-decode';
 import toast, { Toaster } from 'react-hot-toast';
+import { useParams } from 'next/navigation';
 
 interface Medicine {
     _id: string;
@@ -20,13 +21,14 @@ interface Medicine {
     IsDrPrescriptionRequired: boolean;
 }
 
-const MedicineDetails = ({ params }: { params: { id?: string } }) => {
+const MedicineDetails = () => {
+    const params = useParams();
     const [user, setUser] = useState<any>(null);
     const [medicine, setMedicine] = useState<Medicine | null>(null);
     const [quantity, setQuantity] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(true);
 
-    const _id = params.id;
+    const _id = params?.id as string | undefined;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -42,6 +44,7 @@ const MedicineDetails = ({ params }: { params: { id?: string } }) => {
     useEffect(() => {
         const fetchMedicineDetails = async () => {
             try {
+                if (!_id) return;
                 const response = await fetch(`http://localhost:8000/api/medicines/${_id}`);
                 if (!response.ok) throw new Error('Failed to fetch medicine details');
                 const data = await response.json();

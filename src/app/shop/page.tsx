@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Banner from '@/components/Banner';
 
@@ -16,7 +16,7 @@ interface Medicine {
     warnings: string[];
 }
 
-const Shop: React.FC = () => {
+const ShopContent: React.FC = () => {
     const [medicines, setMedicines] = useState<Medicine[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const searchParams = useSearchParams();
@@ -34,7 +34,6 @@ const Shop: React.FC = () => {
                 setLoading(false);
             }
         };
-
         fetchMedicines();
     }, []);
 
@@ -87,6 +86,14 @@ const Shop: React.FC = () => {
                 </div>
             </div>
         </div>
+    );
+};
+
+const Shop: React.FC = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ShopContent />
+        </Suspense>
     );
 };
 

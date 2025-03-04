@@ -1,18 +1,17 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import Lottie from 'lottie-react'
-import animationData from '../../../public/signup.json'
 import Swal from 'sweetalert2'
 import axios from 'axios'
-
-// Image upload function to get image URL
-export const imageUpload = async (image: File) => {
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
+import animationData from '../../../public/signup.json'
+const imageUpload = async (image: File) => {
     const formData = new FormData()
     formData.append('image', image)
 
@@ -21,7 +20,7 @@ export const imageUpload = async (image: File) => {
         formData
     )
 
-    return data.data.display_url // Return the image URL
+    return data.data.display_url
 }
 
 const RegisterPage = () => {
@@ -30,11 +29,18 @@ const RegisterPage = () => {
         name: '',
         email: '',
         password: '',
-        role: 'customer', // Default role as 'customer'
+        role: 'customer',
     })
     const [captchaVerified, setCaptchaVerified] = useState(false)
     const [loading, setLoading] = useState(false)
     const [image, setImage] = useState<File | null>(null)
+    const [recaptchaKey, setRecaptchaKey] = useState<string>('')
+
+    useEffect(() => {
+
+        setRecaptchaKey('6LfI2MQqAAAAAGP00WNxIN8mi5F5_wZuo1GqqjfP')
+
+    }, [])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -62,7 +68,7 @@ const RegisterPage = () => {
         try {
             let imageUrl = null
             if (image) {
-                imageUrl = await imageUpload(image) // Get image URL from image upload
+                imageUrl = await imageUpload(image)
             }
 
             const response = await fetch('http://localhost:8000/api/auth/register', {
@@ -72,7 +78,7 @@ const RegisterPage = () => {
                 },
                 body: JSON.stringify({
                     ...formData,
-                    image: imageUrl, // Send image URL in the request
+                    image: imageUrl,
                 }),
             })
 
@@ -155,10 +161,11 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div className="mt-4">
-                            <ReCAPTCHA
-                                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY || ''}
-                                onChange={handleCaptchaChange}
-                            />
+                            {recaptchaKey ? (
+                                <ReCAPTCHA sitekey={recaptchaKey} onChange={handleCaptchaChange} />
+                            ) : (
+                                <p className="text-red-500">ReCAPTCHA key is missing</p>
+                            )}
                         </div>
                         <Button
                             type="submit"
