@@ -22,7 +22,7 @@ const CartPage = () => {
 
         const fetchCartItems = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/mycart/email/${LogedUserEmail}`);
+                const response = await fetch(`https://medibazar-server.vercel.app/api/mycart/email/${LogedUserEmail}`);
                 if (!response.ok) throw new Error('Failed to fetch cart items');
                 const data = await response.json();
                 setCartItems(data.data);
@@ -43,7 +43,7 @@ const CartPage = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8000/api/mycart', {
+            const response = await fetch('https://medibazar-server.vercel.app/api/mycart', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: LogedUserEmail, productId })

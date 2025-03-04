@@ -12,7 +12,7 @@ const useRole = () => {
     useEffect(() => {
         if (user?.email) {
             axios
-                .get(`http://localhost:8000/api/usersgetall`)
+                .get(`https://medibazar-server.vercel.app/api/usersgetall`)
                 .then((response) => {
                     const filteredUsers = response.data.data.filter((u: { email: string }) => u.email === user.email);
 

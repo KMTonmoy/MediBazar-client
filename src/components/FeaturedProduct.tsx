@@ -21,7 +21,7 @@ const FeaturedMedi: React.FC = () => {
     useEffect(() => {
         const fetchMedicines = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/medicines');
+                const response = await fetch('https://medibazar-server.vercel.app/api/medicines');
                 const data = await response.json();
                 setMedicines(data.data);
             } catch (error) {

@@ -45,7 +45,7 @@ const MedicineDetails = () => {
         const fetchMedicineDetails = async () => {
             try {
                 if (!_id) return;
-                const response = await fetch(`http://localhost:8000/api/medicines/${_id}`);
+                const response = await fetch(`https://medibazar-server.vercel.app/api/medicines/${_id}`);
                 if (!response.ok) throw new Error('Failed to fetch medicine details');
                 const data = await response.json();
                 setMedicine(data.data || data);
@@ -69,7 +69,7 @@ const MedicineDetails = () => {
     const handleAddToCart = async () => {
         if (user && medicine) {
             try {
-                const response = await fetch('http://localhost:8000/api/mycart', {
+                const response = await fetch('https://medibazar-server.vercel.app/api/mycart', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
