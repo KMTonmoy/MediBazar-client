@@ -21,6 +21,7 @@ interface Medicine {
     sideEffects: string[];
     preparation: string;
     prescriptionImage: string;
+    IsDrPrescriptionRequired: boolean;
 }
 
 const ManageMedicines = () => {
@@ -41,12 +42,13 @@ const ManageMedicines = () => {
         sideEffects: [],
         preparation: '',
         prescriptionImage: '',
+        IsDrPrescriptionRequired: false,
     });
     const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
 
     useEffect(() => {
         const fetchMedicines = async () => {
-            const response = await axios.get('http://localhost:8000/api/medicines');
+            const response = await axios.get('https://medibazar-server.vercel.app/api/medicines');
             setMedicines(response.data.data);
         };
         fetchMedicines();
@@ -60,7 +62,7 @@ const ManageMedicines = () => {
     const handleSubmitMedicine = async () => {
         const newMedicineData = { ...newMedicine };
 
-        const response = await axios.post('http://localhost:8000/api/medicines', newMedicineData);
+        const response = await axios.post('https://medibazar-server.vercel.app/api/medicines', newMedicineData);
         if (response.data.success) {
             setMedicines([...medicines, response.data.medicine]);
             setModalOpen(false);
@@ -73,7 +75,7 @@ const ManageMedicines = () => {
 
         const updatedMedicineData = { ...selectedMedicine };
 
-        const response = await axios.put(`http://localhost:8000/api/medicines/${selectedMedicine?._id}`, updatedMedicineData);
+        const response = await axios.put(`https://medibazar-server.vercel.app/api/medicines/${selectedMedicine?._id}`, updatedMedicineData);
         if (response.data.success) {
             setMedicines(medicines.map((med) => (med._id === selectedMedicine?._id ? updatedMedicineData : med)));
             setUpdateModalOpen(false);
@@ -92,7 +94,7 @@ const ManageMedicines = () => {
             confirmButtonText: 'Yes, delete it!',
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const response = await axios.delete(`http://localhost:8000/api/medicines/${id}`);
+                const response = await axios.delete(`https://medibazar-server.vercel.app/api/medicines/${id}`);
                 if (response.data.success) {
                     setMedicines(medicines.filter((med) => med._id !== id));
                     Swal.fire('Deleted!', 'Your medicine has been deleted.', 'success');
@@ -114,6 +116,21 @@ const ManageMedicines = () => {
     const handleUpdateInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setSelectedMedicine((prev) => (prev ? { ...prev, [name]: value } : prev));
+    };
+
+    const handlePrescriptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { value } = e.target;
+        setNewMedicine({ ...newMedicine, IsDrPrescriptionRequired: value === 'yes' });
+    };
+
+    const handleUpdatePrescriptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { value } = e.target;
+        if (selectedMedicine) {
+            setSelectedMedicine({
+                ...selectedMedicine,
+                IsDrPrescriptionRequired: value === 'yes',
+            });
+        }
     };
 
     return (
@@ -244,6 +261,19 @@ const ManageMedicines = () => {
                             className="w-full p-2 border border-gray-300 rounded-md"
                         />
                     </div>
+                    <div className="mb-4">
+                        <label htmlFor="IsDrPrescriptionRequired" className="block text-sm font-medium text-gray-700">Doctor's Prescription Required</label>
+                        <select
+                            id="IsDrPrescriptionRequired"
+                            name="IsDrPrescriptionRequired"
+                            value={newMedicine.IsDrPrescriptionRequired ? 'yes' : 'no'}
+                            onChange={handlePrescriptionChange}
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                        >
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
                     <div className="flex justify-between">
                         <button
                             onClick={handleSubmitMedicine}
@@ -302,7 +332,7 @@ const ManageMedicines = () => {
                             type="number"
                             id="price"
                             name="price"
-                            value={selectedMedicine?.price || 0}
+                            value={selectedMedicine?.price || ''}
                             onChange={handleUpdateInputChange}
                             className="w-full p-2 border border-gray-300 rounded-md"
                         />
@@ -324,7 +354,7 @@ const ManageMedicines = () => {
                             type="number"
                             id="quantity"
                             name="quantity"
-                            value={selectedMedicine?.quantity || 0}
+                            value={selectedMedicine?.quantity || ''}
                             onChange={handleUpdateInputChange}
                             className="w-full p-2 border border-gray-300 rounded-md"
                         />
@@ -346,10 +376,23 @@ const ManageMedicines = () => {
                             type="text"
                             id="tags"
                             name="tags"
-                            value={selectedMedicine?.tags?.join(', ') || ''}
-                            onChange={(e) => handleUpdateInputChange({ target: { name: 'tags', value: e.target.value.split(', ') } })}
+                            value={selectedMedicine?.tags.join(', ') || ''}
+                            onChange={(e) => setSelectedMedicine((prev) => (prev ? { ...prev, tags: e.target.value.split(', ') } : prev))}
                             className="w-full p-2 border border-gray-300 rounded-md"
                         />
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="IsDrPrescriptionRequired" className="block text-sm font-medium text-gray-700">Doctor's Prescription Required</label>
+                        <select
+                            id="IsDrPrescriptionRequired"
+                            name="IsDrPrescriptionRequired"
+                            value={selectedMedicine?.IsDrPrescriptionRequired ? 'yes' : 'no'}
+                            onChange={handleUpdatePrescriptionChange}
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                        >
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
                     </div>
                     <div className="flex justify-between">
                         <button
