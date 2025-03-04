@@ -89,14 +89,8 @@ const Sidebar: React.FC = () => {
                                 <FaPills className="text-xl" />
                                 <span>Manage Medicines</span>
                             </Link>
-                            <Link href="/dashboard/categories" className="flex items-center space-x-4 p-4 hover:bg-gray-700 rounded-lg transition-transform hover:scale-105">
-                                <FaTags className="text-xl" />
-                                <span>Categories</span>
-                            </Link>
-                            <Link href="/dashboard/settings" className="flex items-center space-x-4 p-4 hover:bg-gray-700 rounded-lg transition-transform hover:scale-105">
-                                <FaCogs className="text-xl" />
-                                <span>Store Settings</span>
-                            </Link>
+
+
                         </>
                     )}
                 </nav>
