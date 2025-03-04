@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import ReCAPTCHA from "react-google-recaptcha";
 import Swal from "sweetalert2";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -13,29 +12,19 @@ import loginAnimation from "../../../public/login-animation.json";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [captchaVerified, setCaptchaVerified] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
-  const handleCaptchaChange = (value: string | null) => {
-    setCaptchaVerified(!!value);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const loginData = {
-      email,
-      password,
-    };
+    const loginData = { email, password };
 
     try {
       const response = await fetch("https://medibazar-server.vercel.app/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),
       });
 
@@ -51,6 +40,7 @@ const LoginPage = () => {
           confirmButtonText: "OK",
         }).then(() => {
           router.push("/");
+
         });
       } else {
         Swal.fire("Error", data.message || "Login failed!", "error");
@@ -99,26 +89,14 @@ const LoginPage = () => {
                 />
               </div>
             </div>
-            <div className="mt-4">
-              <ReCAPTCHA sitekey="6LfI2MQqAAAAAGP00WNxIN8mi5F5_wZuo1GqqjfP" onChange={handleCaptchaChange} />
-            </div>
             <div className="relative">
               <button
                 type="submit"
-                disabled={!captchaVerified || loading}
-                className={`w-full py-3 ${
-                  captchaVerified ? "bg-blue-500" : "bg-blue-300 hover:cursor-not-allowed"
-                } text-white text-lg font-semibold rounded-md hover:${
-                  captchaVerified ? "bg-blue-600" : "bg-blue-300"
-                } transition duration-300`}
+                disabled={loading}
+                className="w-full py-3 bg-blue-500 text-white text-lg font-semibold rounded-md hover:bg-blue-600 transition duration-300"
               >
                 {loading ? "Logging In..." : "Log In"}
               </button>
-              {!captchaVerified && (
-                <div className="absolute right-1/2 transform -translate-x-1/2 mt-2 text-sm text-gray-700 bg-yellow-200 p-2 rounded-md shadow-lg">
-                  Please verify the reCAPTCHA to enable login.
-                </div>
-              )}
             </div>
           </form>
           <div className="text-center mt-4">
