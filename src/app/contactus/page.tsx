@@ -1,8 +1,11 @@
 'use client';
 import React, { useState } from 'react';
-import contactAnimation from '../../../public/contactus.json';
+import dynamic from 'next/dynamic';
 import toast, { Toaster } from 'react-hot-toast';
-import Lottie from 'lottie-react';
+
+// ✅ Lottie Animation dynamically import করা হলো (ssr: false)
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
+import contactAnimation from '../../../public/contactus.json';
 
 const ContactUsPage = () => {
     const [formData, setFormData] = useState({
@@ -43,14 +46,13 @@ const ContactUsPage = () => {
         }
     };
 
-    
     return (
         <div className="bg-gray-100 min-h-screen py-12 flex items-center justify-center">
             <Toaster />
             <div className="flex max-w-4xl w-full bg-white p-8 rounded-lg shadow-lg">
                 {/* Lottie Animation */}
                 <div className="w-1/2 flex justify-center items-center">
-                     <Lottie animationData={contactAnimation} loop={true} className="w-full max-w-sm" />
+                    <Lottie animationData={contactAnimation} loop={true} className="w-full max-w-sm" />
                 </div>
 
                 {/* Contact Form */}

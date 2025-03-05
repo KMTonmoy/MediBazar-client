@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Elements, useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import Swal from 'sweetalert2';
-import useUser from '@/hook/useUser';
 
 const stripePromise = loadStripe('pk_test_51PLRDh1ER2eQQaKOIacKieEoEcmrxq1iXUsfZCu7itWd6KAMzuQyotjLWrjKag3KzgTsvZooEDBnfsfyVGMbznhJ00vAOF7I33');
 
@@ -19,31 +18,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
     const stripe = useStripe();
     const elements = useElements();
     const [loading, setLoading] = useState<boolean>(false);
-    const user = useUser();
-    const LogedUserEmail = user?.email;
-    const [mycartItems, setCartItems] = useState<any[]>([]);
-    console.log(mycartItems)
-
-    useEffect(() => {
-
-        const fetchCartItems = async () => {
-            try {
-                const response = await fetch(`https://medibazar-server.vercel.app/api/mycart/email/${LogedUserEmail}`);
-                if (!response.ok) throw new Error('Failed to fetch cart items');
-                const data = await response.json();
-                setCartItems(data.data);
-            } catch (error) {
-                console.error('Error fetching cart items:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchCartItems();
-    }, [LogedUserEmail]);
-
-
-
 
     const handlePayment = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -52,7 +26,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
         setLoading(true);
 
         try {
-            // Step 1: Create Payment Intent
             const response = await fetch('http://localhost:8000/api/create-payment-intent', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -69,7 +42,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
 
             const { clientSecret } = await response.json();
 
-            // Step 2: Confirm Payment
             const result = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: { card: elements.getElement(CardElement)! },
             });
@@ -78,10 +50,16 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
                 Swal.fire('Payment Failed', result.error.message, 'error');
                 return;
             }
+            Swal.fire({
+                title: 'Success',
+                text: 'Payment successful!',
+                icon: 'success',
+            }).then(() => {
+                window.location.reload(); 
+                // console.log('haha')
+            });
 
-            Swal.fire('Success', 'Payment successful!', 'success');
 
-            // Step 3: Save Payment
             const saveResponse = await fetch('http://localhost:8000/api/save-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -99,24 +77,17 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
             }
 
             for (const item of cartItems) {
-                console.log(item);
-
-                // Fetch the current product data
                 const response = await fetch(`http://localhost:8000/api/medicines/${item.productId}`);
 
                 if (!response.ok) {
                     console.error(`Failed to fetch product data for product ${item.productId}`);
-                    continue; // Skip this item if the product fetch fails
+                    continue;
                 }
 
                 const productData = await response.json();
                 if (productData.success && productData.data) {
-                    const currentQuantity = productData.data.quantity; // Get the current quantity
-
-                    // Calculate the updated quantity
+                    const currentQuantity = productData.data.quantity;
                     const updatedQuantity = currentQuantity - item.quantity;
-                    console.log(`Updated quantity for product ${item.productId}: ${updatedQuantity}`);
-
 
                     const updateResponse = await fetch(`http://localhost:8000/api/medicines/${item.productId}`, {
                         method: 'PUT',
@@ -126,14 +97,19 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
 
                     if (!updateResponse.ok) {
                         console.error(`Failed to update stock for product ${item.productId}`);
-                    } else {
-                        console.log(`Stock updated successfully for product ${item.productId}`);
                     }
-                } else {
-                    console.error(`Product data not found for product ${item.productId}`);
+                }
+
+                const deleteResponse = await fetch('http://localhost:8000/api/mycart', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmail, productId: item.productId }),
+                });
+
+                if (!deleteResponse.ok) {
+                    console.error(`Failed to delete cart item ${item.productId}`);
                 }
             }
-
 
             onClose();
         } catch (error) {

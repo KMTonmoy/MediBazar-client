@@ -36,6 +36,12 @@ const CartPage = () => {
         };
 
         fetchCartItems();
+
+        // 🕒 Every 30 seconds, refresh cart data
+        const intervalId = setInterval(fetchCartItems, 30000);
+
+        // Cleanup interval when component unmounts
+        return () => clearInterval(intervalId);
     }, [LogedUserEmail]);
 
     const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -131,7 +137,6 @@ const CartPage = () => {
                             totalPrice={totalPrice}
                             userEmail={LogedUserEmail || ""}
                         />
-
                     )}
                 </>
             )}
