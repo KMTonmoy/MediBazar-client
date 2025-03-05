@@ -55,7 +55,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
                 text: 'Payment successful!',
                 icon: 'success',
             }).then(() => {
-                window.location.reload(); 
+                window.location.reload();
                 // console.log('haha')
             });
 
