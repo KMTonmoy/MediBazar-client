@@ -24,7 +24,7 @@ const CartPage = () => {
 
         const fetchCartItems = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/mycart/email/${LogedUserEmail}`);
+                const response = await fetch(`https://medibazser.vercel.app/api/mycart/email/${LogedUserEmail}`);
                 if (!response.ok) throw new Error('Failed to fetch cart items');
                 const data = await response.json();
                 setCartItems(data.data);
@@ -50,7 +50,7 @@ const CartPage = () => {
         if (!LogedUserEmail) return alert('User not logged in!');
 
         try {
-            const response = await fetch('http://localhost:8000/api/mycart', {
+            const response = await fetch('https://medibazser.vercel.app/api/mycart', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: LogedUserEmail, productId })

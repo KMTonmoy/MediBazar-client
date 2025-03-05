@@ -48,7 +48,7 @@ const ManageMedicines = () => {
 
     useEffect(() => {
         const fetchMedicines = async () => {
-            const response = await axios.get('http://localhost:8000/api/medicines');
+            const response = await axios.get('https://medibazser.vercel.app/api/medicines');
             setMedicines(response.data.data);
         };
         fetchMedicines();
@@ -62,7 +62,7 @@ const ManageMedicines = () => {
     const handleSubmitMedicine = async () => {
         const newMedicineData = { ...newMedicine };
 
-        const response = await axios.post('http://localhost:8000/api/medicines', newMedicineData);
+        const response = await axios.post('https://medibazser.vercel.app/api/medicines', newMedicineData);
         if (response.data.success) {
             setMedicines([...medicines, response.data.medicine]);
             setModalOpen(false);
@@ -75,7 +75,7 @@ const ManageMedicines = () => {
 
         const updatedMedicineData = { ...selectedMedicine };
 
-        const response = await axios.put(`http://localhost:8000/api/medicines/${selectedMedicine?._id}`, updatedMedicineData);
+        const response = await axios.put(`https://medibazser.vercel.app/api/medicines/${selectedMedicine?._id}`, updatedMedicineData);
         if (response.data.success) {
             setMedicines(medicines.map((med) => (med._id === selectedMedicine?._id ? updatedMedicineData : med)));
             setUpdateModalOpen(false);
@@ -94,7 +94,7 @@ const ManageMedicines = () => {
             confirmButtonText: 'Yes, delete it!',
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const response = await axios.delete(`http://localhost:8000/api/medicines/${id}`);
+                const response = await axios.delete(`https://medibazser.vercel.app/api/medicines/${id}`);
                 if (response.data.success) {
                     setMedicines(medicines.filter((med) => med._id !== id));
                     Swal.fire('Deleted!', 'Your medicine has been deleted.', 'success');

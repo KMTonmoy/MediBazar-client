@@ -33,7 +33,7 @@ const OrderManagement = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/get-all-orders');
+        const response = await fetch('https://medibazser.vercel.app/api/get-all-orders');
         if (!response.ok) throw new Error('Failed to fetch orders');
         const data = await response.json();
         setOrders(data);
@@ -49,7 +49,7 @@ const OrderManagement = () => {
 
   const updateOrderTrack = async (orderId: string, newStatus: string) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/update-order/${orderId}`, {
+      const response = await fetch(`https://medibazser.vercel.app/api/update-order/${orderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ordertrack: newStatus }),
