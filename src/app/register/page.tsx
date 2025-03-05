@@ -60,7 +60,7 @@ const RegisterPage = () => {
             }
 
             const response = await fetch(
-                "https://medibazar-server.vercel.app/api/auth/register",
+                "http://localhost:8000/api/auth/register",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

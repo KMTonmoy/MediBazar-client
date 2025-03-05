@@ -20,7 +20,7 @@ const ManageUsers = () => {
         const fetchUsers = async () => {
             setLoading(true);
             try {
-                const response = await axios.get('https://medibazar-server.vercel.app/api/usersgetall');
+                const response = await axios.get('http://localhost:8000/api/usersgetall');
                 setUsers(response.data.data);
             } catch (error) {
                 toast.error('Failed to fetch users!');
