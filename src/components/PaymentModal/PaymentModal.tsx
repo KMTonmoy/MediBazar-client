@@ -26,7 +26,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8000/api/create-payment-intent', {
+            const response = await fetch('https://medibazar-server.vercel.app/api/create-payment-intent', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -60,7 +60,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
             });
 
 
-            const saveResponse = await fetch('http://localhost:8000/api/save-payment', {
+            const saveResponse = await fetch('https://medibazar-server.vercel.app/api/save-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -77,7 +77,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
             }
 
             for (const item of cartItems) {
-                const response = await fetch(`http://localhost:8000/api/medicines/${item.productId}`);
+                const response = await fetch(`https://medibazar-server.vercel.app/api/medicines/${item.productId}`);
 
                 if (!response.ok) {
                     console.error(`Failed to fetch product data for product ${item.productId}`);
@@ -89,7 +89,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
                     const currentQuantity = productData.data.quantity;
                     const updatedQuantity = currentQuantity - item.quantity;
 
-                    const updateResponse = await fetch(`http://localhost:8000/api/medicines/${item.productId}`, {
+                    const updateResponse = await fetch(`https://medibazar-server.vercel.app/api/medicines/${item.productId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ quantity: updatedQuantity }),
@@ -100,7 +100,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, cartItems,
                     }
                 }
 
-                const deleteResponse = await fetch('http://localhost:8000/api/mycart', {
+                const deleteResponse = await fetch('https://medibazar-server.vercel.app/api/mycart', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: userEmail, productId: item.productId }),

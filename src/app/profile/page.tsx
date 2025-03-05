@@ -38,7 +38,7 @@ console.log(userInfo)
         e.preventDefault();
 
         try {
-            const response = await fetch(`http://localhost:8000/api/users/${userInfo._id}`, {
+            const response = await fetch(`https://medibazar-server.vercel.app/api/users/${userInfo._id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ console.log(userInfo)
         }
 
         try {
-            const response = await fetch(`http://localhost:8000/users/${userInfo._id}`, {
+            const response = await fetch(`https://medibazar-server.vercel.app/users/${userInfo._id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
