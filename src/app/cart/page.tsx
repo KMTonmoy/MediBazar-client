@@ -1,10 +1,12 @@
-'use client'
+'use client';
+import PaymentModalWrapper from '@/components/PaymentModal/PaymentModal';
 import useUser from '@/hook/useUser';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { FaTrash, FaEye, FaShoppingCart } from 'react-icons/fa';
+import { FaTrash, FaEye } from 'react-icons/fa';
 
 const CartPage = () => {
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
     const [cartItems, setCartItems] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -36,11 +38,10 @@ const CartPage = () => {
         fetchCartItems();
     }, [LogedUserEmail]);
 
+    const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
     const handleRemoveFromCart = async (productId: string) => {
-        if (!LogedUserEmail) {
-            alert('User not logged in!');
-            return;
-        }
+        if (!LogedUserEmail) return alert('User not logged in!');
 
         try {
             const response = await fetch('https://medibazar-server.vercel.app/api/mycart', {
@@ -51,8 +52,7 @@ const CartPage = () => {
 
             const data = await response.json();
             if (data.success) {
-                alert('Product removed from cart!');
-                setCartItems(cartItems.filter(item => item.productId !== productId)); // UI থেকে রিমুভ করা
+                setCartItems(cartItems.filter(item => item.productId !== productId));
             } else {
                 alert(data.message);
             }
@@ -63,10 +63,6 @@ const CartPage = () => {
 
     const handleViewProduct = (productId: string) => {
         router.push(`/shop/${productId}`);
-    };
-
-    const handleCheckout = () => {
-        router.push('/checkout');
     };
 
     if (loading) {
@@ -108,16 +104,12 @@ const CartPage = () => {
                                     <button
                                         onClick={() => handleRemoveFromCart(item.productId)}
                                         className="flex justify-center items-center p-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-md"
-                                        aria-label="Remove item"
-                                        title="Remove item"
                                     >
                                         <FaTrash />
                                     </button>
                                     <button
                                         onClick={() => handleViewProduct(item.productId)}
                                         className="flex justify-center items-center p-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md"
-                                        aria-label="View product"
-                                        title="View product"
                                     >
                                         <FaEye />
                                     </button>
@@ -125,21 +117,22 @@ const CartPage = () => {
                             </div>
                         ))}
                     </div>
-
-                    {/* Checkout Button */}
+                    <div className="mt-6 text-right text-xl font-bold text-gray-800">Total: ${totalPrice.toFixed(2)}</div>
                     <div className="flex justify-end mt-8">
-                        <button
-                            onClick={handleCheckout}
-                            className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-md text-lg"
-                        >
-                            <FaShoppingCart />
-                            Proceed to Checkout
-
-
-
-
+                        <button onClick={() => setShowPaymentModal(true)} className="bg-green-500 text-white px-6 py-3 rounded-md">
+                            Proceed to Payment
                         </button>
                     </div>
+                    {showPaymentModal && (
+                        <PaymentModalWrapper
+                            isOpen={showPaymentModal}
+                            onClose={() => setShowPaymentModal(false)}
+                            cartItems={cartItems}
+                            totalPrice={totalPrice}
+                            userEmail={LogedUserEmail || ""}
+                        />
+
+                    )}
                 </>
             )}
         </div>
