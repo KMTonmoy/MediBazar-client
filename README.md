@@ -18,6 +18,7 @@ To run the Medibazar client locally, follow these steps:
 
 ### Prerequisites
 
+
 Make sure you have the following installed:
 - [Node.js](https://nodejs.org/) (Recommended version: 14.x or later)
 - [npm](https://www.npmjs.com/) (Package manager for Node.js)
