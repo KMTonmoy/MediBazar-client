@@ -61,7 +61,7 @@ const Navbar = () => {
                     </h1>
                     <div className='hidden md:flex gap-5'>
                         <Link href="/" className={`text-[17px] font-[600] transition-all duration-300 ${pathname === '/' ? 'text-[#4F97FC]' : 'text-black'}`}>Home</Link>
-                        {['Shop', 'Blogs', 'Contact Us', 'About'].map((item, index) => {
+                        {['Shop', 'Contact Us', 'About'].map((item, index) => {
                             const linkPath = `/${item.replace(/\s+/g, '').toLowerCase()}`;
                             return (
                                 <Link key={index} href={linkPath} className={`text-[17px] font-[600] transition-all duration-300 ${pathname === linkPath ? 'text-[#4F97FC]' : 'text-black'}`}>
@@ -109,7 +109,7 @@ const Navbar = () => {
                     </div>
                     <div className='flex flex-col gap-6 px-4 py-6'>
                         <Link href="/" className={`text-[17px] font-[600] transition-all duration-300 ${pathname === '/' ? 'text-[#4F97FC]' : 'text-black'}`} onClick={toggleMenu}>Home</Link>
-                        {['Shop', 'Blogs', 'Contact Us'].map((item, index) => {
+                        {['Shop', 'Contact Us'].map((item, index) => {
                             const linkPath = `/${item.replace(/\s+/g, '').toLowerCase()}`;
                             return (
                                 <Link key={index} href={linkPath} className={`text-[17px] font-[600] transition-all duration-300 ${pathname === linkPath ? 'text-[#4F97FC]' : 'text-black'}`} onClick={toggleMenu}>
